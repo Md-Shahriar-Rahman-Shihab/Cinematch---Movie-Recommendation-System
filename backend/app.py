@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
 
 
 import pickle
@@ -10,13 +12,14 @@ from concurrent.futures import ThreadPoolExecutor
 app = Flask(__name__)
 
 CORS(app)
+load_dotenv()
 
 
 # =========================
 # TMDB API KEY
 # =========================
 
-TMDB_API_KEY = "279e07aefbd457bcab619023cc35d00d"
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 
 # =========================
