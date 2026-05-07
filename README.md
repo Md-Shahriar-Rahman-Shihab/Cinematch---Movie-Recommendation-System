@@ -14,6 +14,10 @@ https://cinematch-movie-recommendation-syst.vercel.app/
 ## Backend API
 https://cinematch-movie-recommendation-system.onrender.com
 
+⚠️ Note:
+The backend is hosted on Render free tier, which may sleep after inactivity.
+An uptime monitor is used to reduce cold-start delays.
+
 ---
 
 # ✨ Features
