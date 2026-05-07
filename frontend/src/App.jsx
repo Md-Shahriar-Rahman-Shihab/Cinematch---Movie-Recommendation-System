@@ -531,6 +531,7 @@ export default function App() {
     window.addEventListener("mouseover", over)
     return () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseover", over) }
   }, [])
+  const API_URL = "https://cinematch-movie-recommendation-system.onrender.com"
 
   // Suggestions debounce
   useEffect(() => {
@@ -538,7 +539,7 @@ export default function App() {
     if (!movie.trim()) { setSuggestions([]); return }
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:5000/search?query=${encodeURIComponent(movie)}`)
+        const res = await fetch(`https://cinematch-movie-recommendation-system.onrender.com/search?query=${encodeURIComponent(movie)}`)
         const data = await res.json()
         setSuggestions(data)
       } catch { setSuggestions([]) }
@@ -551,10 +552,12 @@ export default function App() {
     setLoading(true); setError(""); setSuggestions([])
     setSearchedTitle(movie)
     try {
-      const res = await fetch("http://127.0.0.1:5000/recommend", {
+      const res = await fetch(`${API_URL}/recommend`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ movie })
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ movie }),
       })
       const data = await res.json()
       if (!data.length) { setError("No results found — try another title"); setRecommendations([]) }
