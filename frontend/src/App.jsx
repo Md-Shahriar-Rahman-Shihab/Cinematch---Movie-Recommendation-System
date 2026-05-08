@@ -19,10 +19,13 @@ const CSS = `
     --dim: #2a2a38;
   }
 
-  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; cursor: none !important; }
-  * { cursor: none !important; }
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; }
 
-  /* Custom cursor */
+  /* Cursor — desktop only */
+  @media (pointer: fine) {
+    body, * { cursor: none !important; }
+  }
+
   #cursor {
     position: fixed; width: 12px; height: 12px;
     background: var(--accent); border-radius: 50%;
@@ -30,6 +33,7 @@ const CSS = `
     transform: translate(-50%, -50%);
     transition: width 0.2s, height 0.2s, background 0.2s;
     mix-blend-mode: difference;
+    display: none;
   }
   #cursor-ring {
     position: fixed; width: 36px; height: 36px;
@@ -37,6 +41,11 @@ const CSS = `
     pointer-events: none; z-index: 9998;
     transform: translate(-50%, -50%);
     transition: all 0.12s ease;
+    display: none;
+  }
+  @media (pointer: fine) {
+    #cursor { display: block; }
+    #cursor-ring { display: block; }
   }
   #cursor.hovered { width: 20px; height: 20px; }
   #cursor-ring.hovered { width: 52px; height: 52px; border-color: rgba(230,57,70,0.3); }
@@ -95,15 +104,27 @@ const CSS = `
     position: relative; z-index: 2;
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center;
-    padding: 0 24px 100px;
+    padding: 0 16px 80px;
+  }
+
+  @media (min-width: 480px) {
+    .page { padding: 0 24px 100px; }
   }
 
   /* Hero */
   .hero {
     width: 100%; max-width: 900px;
     text-align: center;
-    padding: 100px 0 70px;
+    padding: 60px 0 44px;
     position: relative;
+  }
+
+  @media (min-width: 480px) {
+    .hero { padding: 80px 0 56px; }
+  }
+
+  @media (min-width: 768px) {
+    .hero { padding: 100px 0 70px; }
   }
 
   .hero-badge {
@@ -111,18 +132,23 @@ const CSS = `
     background: rgba(230,57,70,0.1);
     border: 1px solid rgba(230,57,70,0.25);
     border-radius: 100px;
-    padding: 6px 16px;
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 6px 14px;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--accent2);
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     animation: badgePop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  @media (min-width: 480px) {
+    .hero-badge { font-size: 11px; letter-spacing: 0.15em; padding: 6px 16px; margin-bottom: 32px; }
   }
 
   .badge-dot {
     width: 6px; height: 6px; border-radius: 50%;
     background: var(--accent);
     animation: pulseDot 2s ease-in-out infinite;
+    flex-shrink: 0;
   }
 
   @keyframes pulseDot {
@@ -137,7 +163,7 @@ const CSS = `
 
   .hero-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(80px, 14vw, 160px);
+    font-size: clamp(64px, 18vw, 160px);
     line-height: 0.9;
     letter-spacing: 0.02em;
     color: var(--text);
@@ -148,10 +174,14 @@ const CSS = `
   .hero-title .red { color: var(--accent); position: relative; }
   .hero-title .red::after {
     content: '';
-    position: absolute; bottom: 4px; left: 0; right: 0; height: 4px;
+    position: absolute; bottom: 2px; left: 0; right: 0; height: 3px;
     background: var(--accent);
     transform: scaleX(0); transform-origin: left;
     animation: underlineGrow 0.6s ease 0.9s forwards;
+  }
+
+  @media (min-width: 480px) {
+    .hero-title .red::after { bottom: 4px; height: 4px; }
   }
 
   @keyframes underlineGrow { to { transform: scaleX(1); } }
@@ -162,10 +192,15 @@ const CSS = `
   }
 
   .hero-sub {
-    margin-top: 20px;
-    font-size: 16px; font-weight: 300;
+    margin-top: 16px;
+    font-size: 14px; font-weight: 300;
     color: var(--muted); letter-spacing: 0.02em;
+    padding: 0 8px;
     animation: fadeUp 0.6s ease 0.3s both;
+  }
+
+  @media (min-width: 480px) {
+    .hero-sub { font-size: 16px; margin-top: 20px; padding: 0; }
   }
 
   @keyframes fadeUp {
@@ -176,9 +211,13 @@ const CSS = `
   /* Search */
   .search-wrap {
     width: 100%; max-width: 620px;
-    margin-bottom: 80px;
+    margin-bottom: 56px;
     position: relative;
     animation: fadeUp 0.6s ease 0.4s both;
+  }
+
+  @media (min-width: 768px) {
+    .search-wrap { margin-bottom: 80px; }
   }
 
   .search-box {
@@ -186,9 +225,40 @@ const CSS = `
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 4px;
-    padding: 6px 6px 6px 24px;
     transition: border-color 0.3s, box-shadow 0.3s;
     position: relative; overflow: visible;
+  }
+
+  /* Mobile: stacked layout */
+  @media (max-width: 479px) {
+    .search-box {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0;
+      gap: 0;
+    }
+    .search-input-row {
+      display: flex; align-items: center;
+      padding: 4px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .search-icon-wrap { margin-right: 10px; }
+    .search-input { padding: 14px 0; }
+    .search-btn {
+      border-radius: 0 0 4px 4px;
+      padding: 15px 28px;
+      width: 100%;
+    }
+  }
+
+  /* Tablet+ inline layout */
+  @media (min-width: 480px) {
+    .search-box { padding: 6px 6px 6px 20px; }
+    .search-input-row { display: contents; }
+  }
+
+  @media (min-width: 640px) {
+    .search-box { padding: 6px 6px 6px 24px; }
   }
 
   .search-box::before {
@@ -208,17 +278,26 @@ const CSS = `
   .search-box.focused::before { opacity: 1; }
 
   .search-icon-wrap {
-    width: 20px; height: 20px; flex-shrink: 0; margin-right: 14px;
+    width: 20px; height: 20px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
     color: var(--muted);
+  }
+
+  @media (min-width: 480px) {
+    .search-icon-wrap { margin-right: 14px; }
   }
 
   .search-input {
     flex: 1; background: none; border: none; outline: none;
     color: var(--text);
     font-family: 'Outfit', sans-serif;
-    font-size: 16px; font-weight: 400;
+    font-size: 15px; font-weight: 400;
     padding: 14px 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 480px) {
+    .search-input { font-size: 16px; }
   }
 
   .search-input::placeholder { color: var(--dim); }
@@ -230,9 +309,14 @@ const CSS = `
     font-family: 'Outfit', sans-serif;
     font-size: 13px; font-weight: 600;
     letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 14px 28px; flex-shrink: 0;
+    padding: 14px 22px; flex-shrink: 0;
     position: relative; overflow: hidden;
     transition: background 0.2s, transform 0.15s;
+    touch-action: manipulation;
+  }
+
+  @media (min-width: 640px) {
+    .search-btn { padding: 14px 28px; }
   }
 
   .search-btn::after {
@@ -242,8 +326,10 @@ const CSS = `
     opacity: 0; transition: opacity 0.2s;
   }
 
-  .search-btn:hover { background: var(--accent2); transform: translateY(-1px); }
-  .search-btn:hover::after { opacity: 1; }
+  @media (hover: hover) {
+    .search-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+    .search-btn:hover::after { opacity: 1; }
+  }
   .search-btn:active { transform: scale(0.97) translateY(0); }
   .search-btn:disabled { background: #2a1a1c; color: #5a3a3c; }
 
@@ -269,30 +355,38 @@ const CSS = `
     font-size: 14px; color: #9090a8;
     border-bottom: 1px solid var(--border);
     transition: background 0.15s, color 0.15s, padding-left 0.2s;
+    touch-action: manipulation;
   }
 
   .dropdown-item:last-child { border-bottom: none; }
-  .dropdown-item:hover { background: var(--surface2); color: var(--text); padding-left: 26px; }
+
+  @media (hover: hover) {
+    .dropdown-item:hover { background: var(--surface2); color: var(--text); padding-left: 26px; }
+    .dropdown-item:hover .dropdown-arrow { opacity: 1; }
+  }
 
   .dropdown-arrow {
     font-size: 10px; color: var(--accent); opacity: 0;
     transition: opacity 0.15s; flex-shrink: 0;
   }
-  .dropdown-item:hover .dropdown-arrow { opacity: 1; }
 
   /* Status */
   .status {
-    text-align: center; margin-top: 16px;
-    font-size: 14px; color: var(--muted);
+    text-align: center; margin-top: 14px;
+    font-size: 13px; color: var(--muted);
     font-style: italic;
   }
 
-  .status.error { color: #ff6b6b; font-style: normal; font-size: 13px; letter-spacing: 0.02em; }
+  @media (min-width: 480px) {
+    .status { margin-top: 16px; font-size: 14px; }
+  }
+
+  .status.error { color: #ff6b6b; font-style: normal; letter-spacing: 0.02em; }
 
   /* Loading dots */
   .dots span {
     display: inline-block; width: 4px; height: 4px;
-    border-radius: 50%; background: var(--accent);
+    border-radius: 50%; background: currentColor;
     margin: 0 2px;
     animation: dotBounce 1.4s ease-in-out infinite;
   }
@@ -307,17 +401,34 @@ const CSS = `
   /* Results header */
   .results-header {
     width: 100%; max-width: 900px;
-    display: flex; align-items: flex-end; justify-content: space-between;
-    margin-bottom: 32px;
-    padding-bottom: 20px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
     border-bottom: 1px solid var(--border);
     animation: fadeUp 0.5s ease both;
   }
 
+  @media (min-width: 480px) {
+    .results-header {
+      align-items: flex-end;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+    }
+  }
+
   .results-label {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px; letter-spacing: 0.05em;
-    line-height: 1;
+    font-size: 24px; letter-spacing: 0.05em;
+    line-height: 1.1;
+  }
+
+  @media (min-width: 480px) {
+    .results-label { font-size: 28px; }
+  }
+
+  @media (min-width: 768px) {
+    .results-label { font-size: 32px; }
   }
 
   .results-query { color: var(--accent); }
@@ -328,15 +439,32 @@ const CSS = `
     letter-spacing: 0.15em; text-transform: uppercase;
     background: var(--surface2);
     border: 1px solid var(--border);
-    padding: 6px 14px; border-radius: 100px;
+    padding: 5px 12px; border-radius: 100px;
+    white-space: nowrap; align-self: center;
   }
 
   /* Grid */
   .grid {
     width: 100%; max-width: 900px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  @media (min-width: 380px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  }
+
+  @media (min-width: 560px) {
+    .grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  }
+
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  }
+
+  @media (min-width: 860px) {
+    .grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 20px; }
   }
 
   /* Movie Card */
@@ -361,7 +489,15 @@ const CSS = `
     transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
   }
 
-  .movie-card:hover .poster-wrap img { transform: scale(1.07); }
+  @media (hover: hover) {
+    .movie-card:hover .poster-wrap img { transform: scale(1.07); }
+    .movie-card:hover .poster-overlay { opacity: 1; }
+    .movie-card:hover .overlay-genre { transform: translateY(0); }
+    .movie-card:hover .overlay-title { transform: translateY(0); }
+    .movie-card:hover .poster-wrap::after { opacity: 1; }
+    .movie-card:hover .poster-wrap::before { transform: scaleX(1); }
+    .movie-card:hover .movie-title-text { color: var(--text); }
+  }
 
   /* Poster overlay */
   .poster-overlay {
@@ -370,30 +506,36 @@ const CSS = `
     opacity: 0;
     transition: opacity 0.35s ease;
     display: flex; flex-direction: column;
-    justify-content: flex-end; padding: 16px;
+    justify-content: flex-end; padding: 12px;
   }
 
-  .movie-card:hover .poster-overlay { opacity: 1; }
+  @media (min-width: 480px) {
+    .poster-overlay { padding: 16px; }
+  }
 
   .overlay-genre {
-    font-size: 10px; font-weight: 600;
+    font-size: 9px; font-weight: 600;
     letter-spacing: 0.15em; text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     transform: translateY(8px);
     transition: transform 0.35s ease 0.05s;
   }
 
-  .movie-card:hover .overlay-genre { transform: translateY(0); }
+  @media (min-width: 480px) {
+    .overlay-genre { font-size: 10px; margin-bottom: 6px; }
+  }
 
   .overlay-title {
-    font-size: 13px; font-weight: 600;
+    font-size: 12px; font-weight: 600;
     color: white; line-height: 1.3;
     transform: translateY(8px);
     transition: transform 0.35s ease 0.08s;
   }
 
-  .movie-card:hover .overlay-title { transform: translateY(0); }
+  @media (min-width: 480px) {
+    .overlay-title { font-size: 13px; }
+  }
 
   /* Corner accent on hover */
   .poster-wrap::after {
@@ -401,13 +543,15 @@ const CSS = `
     position: absolute; top: 0; right: 0;
     width: 0; height: 0;
     border-style: solid;
-    border-width: 0 32px 32px 0;
+    border-width: 0 28px 28px 0;
     border-color: transparent var(--accent) transparent transparent;
     opacity: 0;
     transition: opacity 0.3s;
   }
 
-  .movie-card:hover .poster-wrap::after { opacity: 1; }
+  @media (min-width: 480px) {
+    .poster-wrap::after { border-width: 0 32px 32px 0; }
+  }
 
   /* Red line at bottom */
   .poster-wrap::before {
@@ -419,27 +563,36 @@ const CSS = `
     z-index: 2;
   }
 
-  .movie-card:hover .poster-wrap::before { transform: scaleX(1); }
+  .movie-info { padding: 8px 2px 0; }
 
-  .movie-info { padding: 10px 2px 0; }
+  @media (min-width: 480px) {
+    .movie-info { padding: 10px 2px 0; }
+  }
 
   .movie-title-text {
-    font-size: 13px; font-weight: 500;
+    font-size: 12px; font-weight: 500;
     color: #9090a8; line-height: 1.3;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     transition: color 0.2s;
   }
 
-  .movie-card:hover .movie-title-text { color: var(--text); }
+  @media (min-width: 480px) {
+    .movie-title-text { font-size: 13px; }
+  }
 
   /* No poster */
   .no-poster {
     width: 100%; height: 100%;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 10px; color: var(--dim);
+    gap: 8px; color: var(--dim);
   }
 
   .no-poster svg { opacity: 0.3; }
+  .no-poster span { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  @media (min-width: 480px) {
+    .no-poster span { font-size: 10px; }
+  }
 
   /* Shimmer */
   .shimmer-card .shimmer-poster {
@@ -461,7 +614,11 @@ const CSS = `
 
   .shimmer-line {
     height: 12px; border-radius: 2px; background: var(--surface2);
-    margin-top: 10px; width: 75%; position: relative; overflow: hidden;
+    margin-top: 8px; width: 75%; position: relative; overflow: hidden;
+  }
+
+  @media (min-width: 480px) {
+    .shimmer-line { margin-top: 10px; }
   }
 
   .shimmer-line::after {
@@ -473,23 +630,39 @@ const CSS = `
 
   /* Empty state */
   .empty {
-    padding: 80px 0; text-align: center; color: var(--dim);
+    padding: 60px 0; text-align: center; color: var(--dim);
+  }
+
+  @media (min-width: 480px) {
+    .empty { padding: 80px 0; }
   }
 
   .empty-icon {
-    font-size: 64px; margin-bottom: 20px;
+    font-size: 48px; margin-bottom: 16px;
     filter: grayscale(1); opacity: 0.3;
   }
 
-  .empty-text { font-size: 15px; color: var(--muted); font-weight: 300; }
+  @media (min-width: 480px) {
+    .empty-icon { font-size: 64px; margin-bottom: 20px; }
+  }
+
+  .empty-text { font-size: 14px; color: var(--muted); font-weight: 300; }
+
+  @media (min-width: 480px) {
+    .empty-text { font-size: 15px; }
+  }
 
   /* Divider line decoration */
   .deco-line {
     width: 100%; max-width: 900px;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    margin: 60px 0 0;
+    margin: 48px 0 0;
     opacity: 0.3;
+  }
+
+  @media (min-width: 768px) {
+    .deco-line { margin: 60px 0 0; }
   }
 `
 
@@ -500,37 +673,38 @@ export default function App() {
   const [error, setError] = useState("")
   const [suggestions, setSuggestions] = useState([])
   const [focused, setFocused] = useState(false)
-  const [hoveredCard, setHoveredCard] = useState(null)
   const [searchedTitle, setSearchedTitle] = useState("")
   const cursorRef = useRef(null)
   const ringRef = useRef(null)
   const debounceRef = useRef(null)
 
-  // Custom cursor
+  // Custom cursor (desktop pointer devices only)
   useEffect(() => {
-    const move = e => {
-      if (cursorRef.current) {
-        cursorRef.current.style.left = e.clientX + "px"
-        cursorRef.current.style.top = e.clientY + "px"
+    if (window.matchMedia("(pointer: fine)").matches) {
+      const move = e => {
+        if (cursorRef.current) {
+          cursorRef.current.style.left = e.clientX + "px"
+          cursorRef.current.style.top = e.clientY + "px"
+        }
+        if (ringRef.current) {
+          ringRef.current.style.left = e.clientX + "px"
+          ringRef.current.style.top = e.clientY + "px"
+        }
       }
-      if (ringRef.current) {
-        ringRef.current.style.left = e.clientX + "px"
-        ringRef.current.style.top = e.clientY + "px"
+      const over = e => {
+        const isInteractive = e.target.closest("button, a, input, .dropdown-item, .movie-card")
+        cursorRef.current?.classList.toggle("hovered", !!isInteractive)
+        ringRef.current?.classList.toggle("hovered", !!isInteractive)
+      }
+      window.addEventListener("mousemove", move)
+      window.addEventListener("mouseover", over)
+      return () => {
+        window.removeEventListener("mousemove", move)
+        window.removeEventListener("mouseover", over)
       }
     }
-    const over = e => {
-      if (e.target.closest("button, a, input, .dropdown-item, .movie-card")) {
-        cursorRef.current?.classList.add("hovered")
-        ringRef.current?.classList.add("hovered")
-      } else {
-        cursorRef.current?.classList.remove("hovered")
-        ringRef.current?.classList.remove("hovered")
-      }
-    }
-    window.addEventListener("mousemove", move)
-    window.addEventListener("mouseover", over)
-    return () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseover", over) }
   }, [])
+
   const API_URL = "https://cinematch-movie-recommendation-system.onrender.com"
 
   // Suggestions debounce
@@ -539,7 +713,7 @@ export default function App() {
     if (!movie.trim()) { setSuggestions([]); return }
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await fetch(`https://cinematch-movie-recommendation-system.onrender.com/search?query=${encodeURIComponent(movie)}`)
+        const res = await fetch(`${API_URL}/search?query=${encodeURIComponent(movie)}`)
         const data = await res.json()
         setSuggestions(data)
       } catch { setSuggestions([]) }
@@ -554,9 +728,7 @@ export default function App() {
     try {
       const res = await fetch(`${API_URL}/recommend`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ movie }),
       })
       const data = await res.json()
@@ -600,21 +772,24 @@ export default function App() {
         {/* Search */}
         <div className="search-wrap">
           <div className={`search-box ${focused ? "focused" : ""}`}>
-            <div className="search-icon-wrap">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+            {/* Mobile: input row wrapper; desktop: display:contents passthrough */}
+            <div className="search-input-row">
+              <div className="search-icon-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </div>
+              <input
+                className="search-input"
+                type="text"
+                placeholder="e.g. Inception, Parasite…"
+                value={movie}
+                onChange={e => setMovie(e.target.value)}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setTimeout(() => setFocused(false), 150)}
+                onKeyDown={e => e.key === "Enter" && getRecommendations()}
+              />
             </div>
-            <input
-              className="search-input"
-              type="text"
-              placeholder="e.g. Inception, Parasite, The Godfather…"
-              value={movie}
-              onChange={e => setMovie(e.target.value)}
-              onFocus={() => setFocused(true)}
-              onBlur={() => setTimeout(() => setFocused(false), 150)}
-              onKeyDown={e => e.key === "Enter" && getRecommendations()}
-            />
             <button
               className="search-btn"
               onClick={getRecommendations}
@@ -636,6 +811,7 @@ export default function App() {
                   key={i}
                   className="dropdown-item"
                   onMouseDown={() => { setMovie(item); setSuggestions([]) }}
+                  onTouchEnd={() => { setMovie(item); setSuggestions([]) }}
                 >
                   <span className="dropdown-arrow">▶</span>
                   {item}
@@ -656,7 +832,7 @@ export default function App() {
               <span className="results-label">Loading…</span>
             </div>
             <div className="grid">
-              {Array.from({ length: 5 }).map((_, i) => (
+              {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="shimmer-card">
                   <div className="shimmer-poster" style={{ animationDelay: `${i * 0.1}s` }} />
                   <div className="shimmer-line" />
@@ -681,8 +857,6 @@ export default function App() {
                   key={i}
                   className="movie-card"
                   style={{ animationDelay: `${i * 0.07}s` }}
-                  onMouseEnter={() => setHoveredCard(i)}
-                  onMouseLeave={() => setHoveredCard(null)}
                 >
                   <div className="poster-wrap">
                     {m.poster ? (
@@ -695,11 +869,11 @@ export default function App() {
                       </>
                     ) : (
                       <div className="no-poster">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                           <rect x="2" y="2" width="20" height="20" rx="2" />
                           <path d="M7 2v20M17 2v20M2 12h20M2 7h5M17 7h5M2 17h5M17 17h5" />
                         </svg>
-                        <span style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase" }}>No poster</span>
+                        <span>No poster</span>
                       </div>
                     )}
                   </div>
